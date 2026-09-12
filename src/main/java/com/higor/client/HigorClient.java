@@ -37,6 +37,7 @@ public void preInit(FMLPreInitializationEvent event) {
     this.hudManager = new HudManager();
     MinecraftForge.EVENT_BUS.register(this.eventManager);
     MinecraftForge.EVENT_BUS.register(new com.higor.client.events.MenuEventHandler());
+MinecraftForge.EVENT_BUS.register(new com.higor.client.events.HigorKeyHandler());
     System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
 }
 
