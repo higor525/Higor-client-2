@@ -1,0 +1,19 @@
+[
+{
+  "modid": "higorclient",
+  "name": "HIGOR CLIENT",
+  "description": "HIGOR CLIENT - PvP Client para Minecraft 1.8.9",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/higor525/Higor-client-2",
+  "authorList": ["Higor"],
+  "credits": "HIGOR CLIENT",
+  "logoFile": "",
+  "screenshots": [],
+  "parent": "",
+  "useDependencyInformation": false,
+  "requiredMods": [],
+  "dependencies": [],
+  "dependants": []
+}
+]
