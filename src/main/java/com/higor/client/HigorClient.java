@@ -28,16 +28,17 @@ public class HigorClient {
     public HudManager hudManager;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        System.out.println("[HIGOR CLIENT] Pre-Init iniciando...");
-        this.configManager = new ConfigManager(event.getModConfigurationDirectory());
-        this.eventManager = new EventManager();
-        this.moduleManager = new ModuleManager();
-        this.guiManager = new GuiManager();
-        this.hudManager = new HudManager();
-        MinecraftForge.EVENT_BUS.register(this.eventManager);
-        System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
-    }
+public void preInit(FMLPreInitializationEvent event) {
+    System.out.println("[HIGOR CLIENT] Pre-Init iniciando...");
+    this.configManager = new ConfigManager(event.getModConfigurationDirectory());
+    this.eventManager = new EventManager();
+    this.moduleManager = new ModuleManager();
+    this.guiManager = new GuiManager();
+    this.hudManager = new HudManager();
+    MinecraftForge.EVENT_BUS.register(this.eventManager);
+    MinecraftForge.EVENT_BUS.register(new com.higor.client.events.MenuEventHandler());
+    System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
+}
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
