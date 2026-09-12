@@ -1,0 +1,8 @@
+higorclient.name=HIGOR CLIENT
+higorclient.category.combat=Combat
+higorclient.category.movement=Movement
+higorclient.category.player=Player
+higorclient.category.render=Render
+higorclient.category.hud=HUD
+higorclient.category.misc=Misc
+higorclient.category.performance=Performance
