@@ -9,16 +9,17 @@ public class Module {
     private final Category category;
     private boolean enabled;
     private int keybind;
-    private final List<ModuleSetting> settings;
+    private final List<Setting> settings;
 
     public Module(String name, Category category) {
         this.name = name;
         this.category = category;
         this.enabled = false;
         this.keybind = 0;
-        this.settings = new ArrayList<ModuleSetting>();
+        this.settings = new ArrayList<Setting>();
     }
 
+    // ==== GETTERS BÁSICOS ====
     public String getName() { return name; }
     public Category getCategory() { return category; }
     public boolean isEnabled() { return enabled; }
@@ -34,50 +35,41 @@ public class Module {
     public int getKeybind() { return keybind; }
     public void setKeybind(int k) { this.keybind = k; }
 
-    public List<ModuleSetting> getSettings() { return settings; }
-    public void addSetting(ModuleSetting s) { settings.add(s); }
+    // ==== SETTINGS ====
+    public List<Setting> getSettings() { return settings; }
 
+    public void addSetting(Setting s) { settings.add(s); }
+
+    public Setting getSetting(String settingName) {
+        for (Setting s : settings) {
+            if (s.getName().equalsIgnoreCase(settingName)) return s;
+        }
+        return null;
+    }
+
+    public boolean getBool(String settingName) {
+        Setting s = getSetting(settingName);
+        return s != null && s.getBool();
+    }
+
+    public double getNumber(String settingName) {
+        Setting s = getSetting(settingName);
+        return s != null ? s.getNumber() : 0;
+    }
+
+    public String getMode(String settingName) {
+        Setting s = getSetting(settingName);
+        return s != null ? s.getMode() : "";
+    }
+
+    public int getColor(String settingName) {
+        Setting s = getSetting(settingName);
+        return s != null ? s.getColor() : 0xFFFFFFFF;
+    }
+
+    // ==== EVENTOS ====
     public void onEnable() {}
     public void onDisable() {}
     public void onUpdate() {}
-
-    // ==================== MODULE SETTING ====================
-    public static class ModuleSetting {
-        private final String name;
-        private boolean boolValue;
-        private double numValue;
-        private double min, max;
-        private final SettingType type;
-
-        public ModuleSetting(String name, boolean value) {
-            this.name = name;
-            this.boolValue = value;
-            this.type = SettingType.BOOLEAN;
-        }
-
-        public ModuleSetting(String name, double value, double min, double max) {
-            this.name = name;
-            this.numValue = value;
-            this.min = min;
-            this.max = max;
-            this.type = SettingType.NUMBER;
-        }
-
-        public String getName() { return name; }
-        public SettingType getType() { return type; }
-        public boolean getBool() { return boolValue; }
-        public void setBool(boolean v) { this.boolValue = v; }
-        public double getNumber() { return numValue; }
-        public void setNumber(double v) {
-            if (v < min) v = min;
-            if (v > max) v = max;
-            this.numValue = v;
-        }
-        public double getMin() { return min; }
-        public double getMax() { return max; }
-    }
-
-    public enum SettingType {
-        BOOLEAN, NUMBER
-    }
+    public void onRender() {}
 }
