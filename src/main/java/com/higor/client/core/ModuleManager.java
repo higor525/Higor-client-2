@@ -18,11 +18,7 @@ public class ModuleManager {
         register(new Module("OldAnimations", Category.RENDER));
 
         // ==== HUD ====
-        register(new Module("FPS", Category.HUD));
-        register(new Module("CPS", Category.HUD));
-        register(new Module("KeyStrokes", Category.HUD));
-        register(new Module("PotionStatus", Category.HUD));
-        register(new Module("Sidebar", Category.HUD));
+        // Os módulos HUD serão adicionados na 4.4
 
         System.out.println("[HIGOR CLIENT] " + modules.size() + " modulos registrados.");
     }
