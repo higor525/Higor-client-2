@@ -9,7 +9,21 @@ public class ModuleManager {
 
     public void registerAll() {
         System.out.println("[HIGOR CLIENT] Registrando modulos...");
-        // Modulos serao adicionados nas Etapas 3, 4 e 5
+
+        // ==== MOVEMENT ====
+        register(new Module("ToggleSprint", Category.MOVEMENT));
+
+        // ==== RENDER ====
+        register(new Module("FullBright", Category.RENDER));
+        register(new Module("OldAnimations", Category.RENDER));
+
+        // ==== HUD ====
+        register(new Module("FPS", Category.HUD));
+        register(new Module("CPS", Category.HUD));
+        register(new Module("KeyStrokes", Category.HUD));
+        register(new Module("PotionStatus", Category.HUD));
+        register(new Module("Sidebar", Category.HUD));
+
         System.out.println("[HIGOR CLIENT] " + modules.size() + " modulos registrados.");
     }
 
@@ -24,18 +38,14 @@ public class ModuleManager {
     public List<Module> getModulesByCategory(Category category) {
         List<Module> result = new ArrayList<Module>();
         for (Module m : modules) {
-            if (m.getCategory() == category) {
-                result.add(m);
-            }
+            if (m.getCategory() == category) result.add(m);
         }
         return result;
     }
 
     public Module getModuleByName(String name) {
         for (Module m : modules) {
-            if (m.getName().equalsIgnoreCase(name)) {
-                return m;
-            }
+            if (m.getName().equalsIgnoreCase(name)) return m;
         }
         return null;
     }
