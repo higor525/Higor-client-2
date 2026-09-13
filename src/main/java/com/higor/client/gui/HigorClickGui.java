@@ -115,6 +115,29 @@ private float hudDragOffsetY = 0;
         if (mouseButton != 0) return;
 
         // Painel aberto tem prioridade
+// PRIORIDADE 0: tentar arrastar um HUD clicado
+java.util.List<com.higor.client.core.Module> huds = 
+        HigorClient.instance.moduleManager.getModulesByCategory(
+                com.higor.client.core.Category.HUD);
+for (int i = huds.size() - 1; i >= 0; i--) {
+    com.higor.client.core.Module mm = huds.get(i);
+    if (!(mm instanceof com.higor.client.hud.HudModule)) continue;
+    com.higor.client.hud.HudModule hud = (com.higor.client.hud.HudModule) mm;
+    if (!hud.isEnabled()) continue;
+
+    float hx = hud.getPosX();
+    float hy = hud.getPosY();
+    int hw = (int)(hud.getWidth() * hud.getScale());
+    int hh = (int)(hud.getHeight() * hud.getScale());
+
+    if (mouseX >= hx && mouseX <= hx + hw
+            && mouseY >= hy && mouseY <= hy + hh) {
+        draggingHud = hud;
+        hudDragOffsetX = mouseX - hx;
+        hudDragOffsetY = mouseY - hy;
+        return;
+    }
+}
         if (openPanel != null) {
             boolean shouldClose = openPanel.onClick(mouseX, mouseY);
             if (shouldClose) {
