@@ -25,6 +25,10 @@ public class Perspective extends Module {
     @Override
     public void onDisable() {
         MinecraftForge.EVENT_BUS.unregister(this);
+        // Volta pra primeira pessoa ao desligar
+        if (Minecraft.getMinecraft().thePlayer != null) {
+            Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+        }
         System.out.println("[HIGOR CLIENT] Perspective desativado");
     }
 
@@ -39,12 +43,17 @@ public class Perspective extends Module {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event) {
+        if (!isEnabled()) return;
         if (Minecraft.getMinecraft().currentScreen != null) return;
+
         if (Keyboard.getEventKey() != getKey()) return;
         if (!Keyboard.getEventKeyState()) return;
 
-        int current = Minecraft.getMinecraft().gameSettings.thirdPersonView;
-        // Cicla: 0 (1ª) -> 1 (3ª tras) -> 2 (3ª frente) -> 0
-        Minecraft.getMinecraft().gameSettings.thirdPersonView = (current + 1) % 3;
+        Minecraft mc = Minecraft.getMinecraft();
+        int current = mc.gameSettings.thirdPersonView;
+        // Cicla: 0 (1ª) -> 1 (3ª trás) -> 2 (3ª frente) -> 0
+        mc.gameSettings.thirdPersonView = (current + 1) % 3;
+
+        System.out.println("[HIGOR CLIENT] Perspective: " + mc.gameSettings.thirdPersonView);
     }
 }
