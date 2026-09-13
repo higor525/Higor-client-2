@@ -12,7 +12,10 @@ public class HigorClickGui extends GuiScreen {
 
     private Category selected = Category.COMBAT;
     private HigorConfigPanel openPanel = null;
-
+// Arrastar HUDs
+private com.higor.client.hud.HudModule draggingHud = null;
+private float hudDragOffsetX = 0;
+private float hudDragOffsetY = 0;
     private static final int PANEL_BG = 0xFF0A0A0A;
     private static final int PANEL_BORDER = 0xFF00AAFF;
     private static final int SIDEBAR_BG = 0xFF050505;
