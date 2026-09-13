@@ -5,6 +5,7 @@ import com.higor.client.hud.HudFPS;
 import com.higor.client.hud.HudKeystrokes;
 import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
+import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HurtCam;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ModuleManager {
         register(new Module("ToggleSprint", Category.MOVEMENT));
 
         // ==== RENDER ====
-        register(new Module("FullBright", Category.RENDER));
+        register(new FullBright());
         register(new Module("OldAnimations", Category.RENDER));
         register(new HurtCam());
 
