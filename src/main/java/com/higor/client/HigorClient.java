@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = HigorClient.MODID, name = HigorClient.NAME, version = HigorClient.VERSION,
-     acceptableRemoteVersions = "*")
+@Mod(modid = HigorClient.MODID, name = HigorClient.NAME, version = HigorClient.VERSION)
 public class HigorClient {
 
     public static final String MODID = "higorclient";
