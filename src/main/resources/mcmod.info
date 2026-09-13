@@ -11,9 +11,11 @@
   "logoFile": "",
   "screenshots": [],
   "parent": "",
-  "useDependencyInformation": false,
+  "useDependencyInformation": true,
   "requiredMods": [],
   "dependencies": [],
-  "dependants": []
+  "dependants": [],
+  "updateUrl": "",
+  "updateJSON": ""
 }
 ]
