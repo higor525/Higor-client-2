@@ -214,12 +214,18 @@ protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, lo
 }
 
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-        if (openPanel != null) {
-            openPanel.onMouseRelease();
-        }
+protected void mouseReleased(int mouseX, int mouseY, int state) {
+    super.mouseReleased(mouseX, mouseY, state);
+    if (openPanel != null) {
+        openPanel.onMouseRelease();
     }
+    if (draggingHud != null) {
+        draggingHud = null;
+        // Salva ao soltar
+        HigorClient.instance.configManager.saveAll(
+                HigorClient.instance.moduleManager);
+    }
+}
 
     private boolean isInSidebar(int mouseX, int mouseY, int catY) {
         return mouseX >= guiX && mouseX <= guiX + SIDEBAR_W
