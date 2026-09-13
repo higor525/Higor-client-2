@@ -1,4 +1,3 @@
-
 package com.higor.client.config;
 
 import com.google.gson.Gson;
@@ -18,14 +17,14 @@ import java.io.IOException;
 public class ConfigManager {
 
     private final File configDir;
-    private final File hudFile;
     private final File modulesFile;
+    private final File hudFile;
     private final Gson gson;
 
     public ConfigManager(File minecraftConfigDir) {
         this.configDir = new File(minecraftConfigDir, "higorclient");
-        this.hudFile = new File(configDir, "hud.json");
         this.modulesFile = new File(configDir, "modules.json");
+        this.hudFile = new File(configDir, "hud.json");
         this.gson = new GsonBuilder().setPrettyPrinting().create();
 
         if (!configDir.exists()) {
@@ -34,27 +33,25 @@ public class ConfigManager {
         }
     }
 
-    // ==== LOAD ====
     public void loadAll(com.higor.client.core.ModuleManager moduleManager) {
         System.out.println("[HIGOR CLIENT] Carregando configuracoes...");
 
-        // Cria arquivos padrão se não existirem
         createIfMissing("modules.json", "{}");
         createIfMissing("hud.json", "{}");
         createIfMissing("settings.json", "{\"theme\":\"dark-blue\",\"version\":\"0.1.0\"}");
         createIfMissing("profiles.json", "{\"active\":\"default\"}");
 
-        // Carrega os módulos
-        loadModules(moduleManager);
+        loadFromFile(modulesFile, moduleManager);
+        loadFromFile(hudFile, moduleManager);
 
         System.out.println("[HIGOR CLIENT] Configuracoes carregadas.");
     }
 
-    private void loadModules(com.higor.client.core.ModuleManager mm) {
-        if (!hudFile.exists()) return;
+    private void loadFromFile(File file, com.higor.client.core.ModuleManager mm) {
+        if (!file.exists()) return;
 
         try {
-            FileReader reader = new FileReader(hudFile);
+            FileReader reader = new FileReader(file);
             JsonElement el = new JsonParser().parse(reader);
             reader.close();
 
@@ -89,23 +86,16 @@ public class ConfigManager {
                     }
                 }
             }
-            System.out.println("[HIGOR CLIENT] Configuracoes HUD carregadas.");
         } catch (Exception e) {
-            System.err.println("[HIGOR CLIENT] Erro ao carregar configs: " + e.getMessage());
+            System.err.println("[HIGOR CLIENT] Erro ao carregar " + file.getName() + ": " + e.getMessage());
         }
     }
 
-    // ==== SAVE ====
     public void saveAll(com.higor.client.core.ModuleManager mm) {
-        saveModules(mm);
-    }
-
-    private void saveModules(com.higor.client.core.ModuleManager mm) {
-        JsonObject root = new JsonObject();
+        JsonObject modulesObj = new JsonObject();
+        JsonObject hudObj = new JsonObject();
 
         for (Module m : mm.getModules()) {
-            if (m.getCategory() != Category.HUD) continue;
-
             JsonObject mod = new JsonObject();
             mod.addProperty("enabled", m.isEnabled());
 
@@ -125,16 +115,26 @@ public class ConfigManager {
                         break;
                 }
             }
-            root.add(m.getName(), mod);
+
+            if (m.getCategory() == Category.HUD) {
+                hudObj.add(m.getName(), mod);
+            } else {
+                modulesObj.add(m.getName(), mod);
+            }
         }
 
+        writeJson(modulesFile, modulesObj);
+        writeJson(hudFile, hudObj);
+        System.out.println("[HIGOR CLIENT] Configuracoes salvas.");
+    }
+
+    private void writeJson(File file, JsonObject obj) {
         try {
-            FileWriter writer = new FileWriter(hudFile);
-            gson.toJson(root, writer);
+            FileWriter writer = new FileWriter(file);
+            gson.toJson(obj, writer);
             writer.close();
-            System.out.println("[HIGOR CLIENT] Configuracoes HUD salvas.");
         } catch (IOException e) {
-            System.err.println("[HIGOR CLIENT] Erro ao salvar configs: " + e.getMessage());
+            System.err.println("[HIGOR CLIENT] Erro ao salvar " + file.getName() + ": " + e.getMessage());
         }
     }
 
