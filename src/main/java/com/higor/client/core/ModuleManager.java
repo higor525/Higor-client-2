@@ -7,6 +7,7 @@ import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HurtCam;
+import com.higor.client.modules.ToggleSprint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ModuleManager {
         System.out.println("[HIGOR CLIENT] Registrando modulos...");
 
         // ==== MOVEMENT ====
-        register(new Module("ToggleSprint", Category.MOVEMENT));
+        register(new ToggleSprint());
 
         // ==== RENDER ====
         register(new FullBright());
