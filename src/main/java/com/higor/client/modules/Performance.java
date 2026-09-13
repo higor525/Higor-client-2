@@ -11,7 +11,7 @@ public class Performance extends Module {
 
     private int originalRenderDistance;
     private int originalParticles;
-    private boolean originalClouds;
+    private int originalClouds;
     private boolean originalEntityShadows;
     private int originalSmoothLighting;
     private boolean originalViewBobbing;
@@ -84,10 +84,11 @@ public class Performance extends Module {
             mc.gameSettings.particleSetting = 0;
         }
 
-        mc.gameSettings.clouds = getBool("Nuvens");
+        // Nuvens é int no 1.8.9: 0=off, 1=fast, 2=fancy
+        mc.gameSettings.clouds = getBool("Nuvens") ? 1 : 0;
         mc.gameSettings.entityShadows = getBool("Sombras Entidades");
         mc.gameSettings.ambientOcclusion = getBool("Smooth Lighting") ? 1 : 0;
         mc.gameSettings.viewBobbing = getBool("View Bobbing");
         mc.gameSettings.mipmapLevels = (int) getNumber("Mipmap");
     }
-          }
+}
