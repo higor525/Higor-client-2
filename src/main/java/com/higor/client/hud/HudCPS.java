@@ -1,6 +1,7 @@
 package com.higor.client.hud;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -58,7 +59,7 @@ public class HudCPS extends HudModule {
         if (hasBackground()) {
             int w = mc.fontRendererObj.getStringWidth(text) + 4;
             int h = mc.fontRendererObj.FONT_HEIGHT + 4;
-            drawRect(-2, -2, w - 2, h - 2, getBgColor());
+            Gui.drawRect(-2, -2, w - 2, h - 2, getBgColor());
         }
 
         mc.fontRendererObj.drawStringWithShadow(text, 0, 0, getTextColor());
