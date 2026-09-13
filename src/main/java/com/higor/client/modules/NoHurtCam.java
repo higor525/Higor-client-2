@@ -5,6 +5,7 @@ import com.higor.client.core.Module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.lang.reflect.Field;
@@ -32,13 +33,15 @@ public class NoHurtCam extends Module {
     }
 
     private void findField() {
-        for (String n : new String[]{"hurtCameraEffect","field_78498_aX"}) {
+        try {
+            hurtCameraEffect = ObfuscationReflectionHelper.findField(
+                EntityRenderer.class, "field_78498_aX"
+            );
+        } catch (Exception e) {
             try {
-                Field f = EntityRenderer.class.getDeclaredField(n);
-                f.setAccessible(true);
-                hurtCameraEffect = f;
-                return;
-            } catch (NoSuchFieldException ignored) {}
+                hurtCameraEffect = EntityRenderer.class.getDeclaredField("hurtCameraEffect");
+                hurtCameraEffect.setAccessible(true);
+            } catch (Exception ignored) {}
         }
     }
 }
