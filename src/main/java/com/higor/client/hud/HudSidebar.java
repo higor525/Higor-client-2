@@ -1,6 +1,7 @@
 package com.higor.client.hud;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -43,7 +44,6 @@ public class HudSidebar extends HudModule {
             list = list.subList(list.size() - 15, list.size());
         }
 
-        // Título
         String title = objective.getDisplayName();
         int titleWidth = mc.fontRendererObj.getStringWidth(title);
         int maxWidth = titleWidth;
@@ -59,15 +59,12 @@ public class HudSidebar extends HudModule {
         int totalH = lineH * (list.size() + 1) + padding * 2 + 2;
         int totalW = maxWidth + padding * 2;
 
-        // Background (estilo 1.8 - fundo escuro semi-transparente)
-        drawRect(0, 0, totalW, totalH, getBgColor());
+        Gui.drawRect(0, 0, totalW, totalH, getBgColor());
 
-        // Título (centralizado, com linha azul)
         mc.fontRendererObj.drawString(title,
                 (totalW - titleWidth) / 2, padding, getTextColor());
-        drawRect(0, padding + lineH, totalW, padding + lineH + 1, 0xFF00AAFF);
+        Gui.drawRect(0, padding + lineH, totalW, padding + lineH + 1, 0xFF00AAFF);
 
-        // Linhas
         int y = padding + lineH + 2;
         for (int i = list.size() - 1; i >= 0; i--) {
             Score s = list.get(i);
