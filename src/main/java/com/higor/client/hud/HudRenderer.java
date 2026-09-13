@@ -5,7 +5,6 @@ import com.higor.client.core.Category;
 import com.higor.client.core.Module;
 import com.higor.client.gui.HigorClickGui;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,7 +39,6 @@ public class HudRenderer {
         }
     }
 
-    // Cancela a renderização da sidebar vanilla se o HIGOR estiver substituindo
     @SubscribeEvent
     public void onRenderPre(RenderGameOverlayEvent.Pre event) {
         if (event.type != RenderGameOverlayEvent.ElementType.TEXT) return;
@@ -52,31 +50,12 @@ public class HudRenderer {
         if (!(sidebar instanceof HudSidebar)) return;
         HudSidebar hs = (HudSidebar) sidebar;
 
-        if (hs.isEnabled() && hs.shouldReplaceVanilla()) {
-            // Cancela a renderização vanilla da sidebar
-            // Não dá pra cancelar "só" a sidebar, então escondemos via display slot
-            ScoreObjective obj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
-            if (obj != null) {
-                // Salva o nome original e esconde temporariamente
-                // Estratégia: limpar o display slot 1 temporariamente
-                mc.theWorld.getScoreboard().setObjectiveInDisplaySlot(1, null);
-                // Restaura depois (no Post)
-                pendingRestore = obj;
-            }
+        if (!hs.isEnabled() || !hs.shouldReplaceVanilla()) return;
+
+        // Se há uma sidebar vanilla sendo renderizada, cancela
+        ScoreObjective obj = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        if (obj != null) {
+            event.setCanceled(true);
         }
-    }
-
-    private ScoreObjective pendingRestore = null;
-
-    @SubscribeEvent
-    public void onRenderPost(RenderGameOverlayEvent.Post event) {
-        if (event.type != RenderGameOverlayEvent.ElementType.TEXT) return;
-        if (pendingRestore == null) return;
-
-        Minecraft mc = Minecraft.getMinecraft();
-        if (mc.theWorld != null) {
-            mc.theWorld.getScoreboard().setObjectiveInDisplaySlot(1, pendingRestore);
-        }
-        pendingRestore = null;
     }
 }
