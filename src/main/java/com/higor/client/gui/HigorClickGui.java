@@ -28,6 +28,7 @@ public class HigorClickGui extends GuiScreen {
     private static final int SIDEBAR_W = 80;
     private static final int HEADER_H = 16;
     private static final int ROW_H = 12;
+    private static final int PANEL_W = 180;
 
     private int guiX, guiY;
 
@@ -41,17 +42,14 @@ public class HigorClickGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawRect(0, 0, this.width, this.height, 0x80000000);
 
-        // Painel principal
         drawRect(guiX, guiY, guiX + GUI_W, guiY + GUI_H, PANEL_BG);
         drawBorder(guiX, guiY, GUI_W, GUI_H, PANEL_BORDER);
 
-        // Header
         drawRect(guiX, guiY, guiX + GUI_W, guiY + HEADER_H, 0xFF001428);
         drawRect(guiX, guiY + HEADER_H - 1, guiX + GUI_W, guiY + HEADER_H, PANEL_BORDER);
         drawCenteredString(this.fontRendererObj, "HIGOR CLIENT",
                 guiX + GUI_W / 2, guiY + 4, TITLE_COLOR);
 
-        // Sidebar
         drawRect(guiX, guiY + HEADER_H, guiX + SIDEBAR_W, guiY + GUI_H, SIDEBAR_BG);
         drawRect(guiX + SIDEBAR_W - 1, guiY + HEADER_H, guiX + SIDEBAR_W, guiY + GUI_H, PANEL_BORDER);
 
@@ -68,7 +66,6 @@ public class HigorClickGui extends GuiScreen {
             catY += ROW_H;
         }
 
-        // Lista de módulos
         List<Module> mods = HigorClient.instance.moduleManager.getModulesByCategory(selected);
         int modY = guiY + HEADER_H + 4;
         int modX = guiX + SIDEBAR_W + 6;
@@ -81,10 +78,20 @@ public class HigorClickGui extends GuiScreen {
                 int nameColor = hovered ? 0xFFFFFFFF : 0xFFCCCCCC;
                 this.fontRendererObj.drawString(m.getName(), modX, modY, nameColor);
 
+                // Toggle [ ON ] / [ OFF ] — clicável separadamente
                 String toggle = m.isEnabled() ? "[ ON  ]" : "[ OFF ]";
                 int toggleColor = m.isEnabled() ? MODULE_ON : MODULE_OFF;
-                this.fontRendererObj.drawString(toggle,
-                        guiX + GUI_W - 60, modY, toggleColor);
+                int toggleX = guiX + GUI_W - 60;
+                this.fontRendererObj.drawString(toggle, toggleX, modY, toggleColor);
+
+                // Botão de config "cfg" — só nos que têm settings
+                if (!m.getSettings().isEmpty()) {
+                    int cfgX = guiX + GUI_W - 14;
+                    boolean cfgHover = mouseX >= cfgX && mouseX <= cfgX + 12
+                            && mouseY >= modY - 1 && mouseY <= modY + 9;
+                    int cfgColor = cfgHover ? 0xFFFFFFFF : 0xFF00AAFF;
+                    this.fontRendererObj.drawString("cfg", cfgX, modY, cfgColor);
+                }
 
                 modY += ROW_H;
             }
@@ -95,7 +102,6 @@ public class HigorClickGui extends GuiScreen {
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        // Painel de config por cima
         if (openPanel != null) {
             openPanel.render(this.mc, mouseX, mouseY);
         }
@@ -105,7 +111,7 @@ public class HigorClickGui extends GuiScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton != 0) return;
 
-        // Se tem painel aberto, ele captura o clique primeiro
+        // Painel aberto tem prioridade
         if (openPanel != null) {
             boolean shouldClose = openPanel.onClick(mouseX, mouseY);
             if (shouldClose) {
@@ -114,7 +120,7 @@ public class HigorClickGui extends GuiScreen {
             return;
         }
 
-        // Clicou nas categorias
+        // Categorias
         int catY = guiY + HEADER_H + 4;
         for (Category cat : Category.values()) {
             if (isInSidebar(mouseX, mouseY, catY)) {
@@ -124,34 +130,60 @@ public class HigorClickGui extends GuiScreen {
             catY += ROW_H;
         }
 
-        // Clicou nos módulos
+        // Módulos
         List<Module> mods = HigorClient.instance.moduleManager.getModulesByCategory(selected);
         int modY = guiY + HEADER_H + 4;
         int modX = guiX + SIDEBAR_W + 6;
         for (Module m : mods) {
             if (isInModuleList(mouseX, mouseY, modX, modY)) {
-                // Se o módulo tem configs, abre painel
+
+                // Clicou no botão "cfg" → abre painel
                 if (!m.getSettings().isEmpty()) {
-                    openPanel = new HigorConfigPanel(m,
-                            guiX + GUI_W + 6, guiY);
-                    // Ajusta se ultrapassar a tela
-                    if (openPanel != null) {
-                        int panelRight = guiX + GUI_W + 6 + 180;
-                        if (panelRight > this.width - 4) {
-                            openPanel = new HigorConfigPanel(m,
-                                    guiX - 186, guiY);
+                    int cfgX = guiX + GUI_W - 14;
+                    if (mouseX >= cfgX && mouseX <= cfgX + 12) {
+                        int px = guiX + GUI_W + 6;
+                        if (px + PANEL_W > this.width - 4) {
+                            px = guiX - PANEL_W - 6;
+                            if (px < 4) {
+                                px = guiX + GUI_W - PANEL_W - 4;
+                            }
                         }
+                        openPanel = new HigorConfigPanel(m, px, guiY);
+                        return;
                     }
-                } else {
-                    // Senão, só toggla
-                    m.toggle();
                 }
+
+                // Clicou no [ ON ] / [ OFF ] → toggla
+                int toggleX = guiX + GUI_W - 60;
+                if (mouseX >= toggleX && mouseX <= toggleX + 50) {
+                    m.toggle();
+                    return;
+                }
+
+                // Clicou no nome → toggla também (facilita)
+                m.toggle();
                 return;
             }
             modY += ROW_H;
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+        if (openPanel != null) {
+            openPanel.onMouseDrag(mouseX, mouseY);
+        }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        if (openPanel != null) {
+            openPanel.onMouseRelease();
+        }
     }
 
     private boolean isInSidebar(int mouseX, int mouseY, int catY) {
@@ -170,21 +202,6 @@ public class HigorClickGui extends GuiScreen {
         drawRect(x, y, x + 1, y + h, color);
         drawRect(x + w - 1, y, x + w, y + h, color);
     }
-@Override
-protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-    super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-    if (openPanel != null) {
-        openPanel.onMouseDrag(mouseX, mouseY);
-    }
-}
-
-@Override
-protected void mouseReleased(int mouseX, int mouseY, int state) {
-    super.mouseReleased(mouseX, mouseY, state);
-    if (openPanel != null) {
-        openPanel.onMouseRelease();
-    }
-}
 
     @Override
     public boolean doesGuiPauseGame() {
