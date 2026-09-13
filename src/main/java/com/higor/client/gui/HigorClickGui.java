@@ -11,6 +11,7 @@ import java.util.List;
 public class HigorClickGui extends GuiScreen {
 
     private Category selected = Category.COMBAT;
+    private HigorConfigPanel openPanel = null;
 
     private static final int PANEL_BG = 0xFF0A0A0A;
     private static final int PANEL_BORDER = 0xFF00AAFF;
@@ -38,7 +39,6 @@ public class HigorClickGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        // Fundo escurecido da tela
         drawRect(0, 0, this.width, this.height, 0x80000000);
 
         // Painel principal
@@ -81,7 +81,6 @@ public class HigorClickGui extends GuiScreen {
                 int nameColor = hovered ? 0xFFFFFFFF : 0xFFCCCCCC;
                 this.fontRendererObj.drawString(m.getName(), modX, modY, nameColor);
 
-                // Toggle [ ON ] / [ OFF ]
                 String toggle = m.isEnabled() ? "[ ON  ]" : "[ OFF ]";
                 int toggleColor = m.isEnabled() ? MODULE_ON : MODULE_OFF;
                 this.fontRendererObj.drawString(toggle,
@@ -91,16 +90,29 @@ public class HigorClickGui extends GuiScreen {
             }
         }
 
-        // Rodapé
         drawString(this.fontRendererObj, "RSHIFT para fechar",
                 guiX + 4, guiY + GUI_H - 10, 0xFF444444);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        // Painel de config por cima
+        if (openPanel != null) {
+            openPanel.render(this.mc, mouseX, mouseY);
+        }
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton != 0) return;
+
+        // Se tem painel aberto, ele captura o clique primeiro
+        if (openPanel != null) {
+            boolean shouldClose = openPanel.onClick(mouseX, mouseY);
+            if (shouldClose) {
+                openPanel = null;
+            }
+            return;
+        }
 
         // Clicou nas categorias
         int catY = guiY + HEADER_H + 4;
@@ -118,7 +130,22 @@ public class HigorClickGui extends GuiScreen {
         int modX = guiX + SIDEBAR_W + 6;
         for (Module m : mods) {
             if (isInModuleList(mouseX, mouseY, modX, modY)) {
-                m.toggle();
+                // Se o módulo tem configs, abre painel
+                if (!m.getSettings().isEmpty()) {
+                    openPanel = new HigorConfigPanel(m,
+                            guiX + GUI_W + 6, guiY);
+                    // Ajusta se ultrapassar a tela
+                    if (openPanel != null) {
+                        int panelRight = guiX + GUI_W + 6 + 180;
+                        if (panelRight > this.width - 4) {
+                            openPanel = new HigorConfigPanel(m,
+                                    guiX - 186, guiY);
+                        }
+                    }
+                } else {
+                    // Senão, só toggla
+                    m.toggle();
+                }
                 return;
             }
             modY += ROW_H;
@@ -148,4 +175,4 @@ public class HigorClickGui extends GuiScreen {
     public boolean doesGuiPauseGame() {
         return false;
     }
-            }
+}
