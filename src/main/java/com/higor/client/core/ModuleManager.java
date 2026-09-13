@@ -73,7 +73,7 @@ public class ModuleManager {
     public List<Module> getModulesByCategory(Category category) {
         List<Module> result = new ArrayList<Module>();
         for (Module m : modules) {
-            if (m.getCategory() == category) result.add(m);
+            // Salva TODOS os módulos (HUD + invisíveis)
         }
         return result;
     }
