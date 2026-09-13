@@ -5,6 +5,7 @@ import com.higor.client.hud.HudFPS;
 import com.higor.client.hud.HudKeystrokes;
 import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
+import com.higor.client.modules.ChatConfig;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
@@ -36,6 +37,7 @@ public class ModuleManager {
         register(new HurtCam());
         register(new Zoom());
         register(new Perspective());
+        register(new ChatConfig());
 
         // ==== PERFORMANCE ====
         register(new MouseDelayFix());
