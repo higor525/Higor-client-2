@@ -8,6 +8,7 @@ import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HurtCam;
 import com.higor.client.modules.ToggleSprint;
+import com.higor.client.modules.Zoom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class ModuleManager {
         register(new FullBright());
         register(new Module("OldAnimations", Category.RENDER));
         register(new HurtCam());
+        register(new Zoom());
 
         // ==== HUD ====
         register(new HudFPS());
