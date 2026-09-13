@@ -11,6 +11,7 @@ import com.higor.client.modules.FPSBoost;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
+import com.higor.client.modules.MotoG15Profile;
 import com.higor.client.modules.MouseDelayFix;
 import com.higor.client.modules.OldAnimations;
 import com.higor.client.modules.Performance;
@@ -47,6 +48,7 @@ public class ModuleManager {
         register(new Performance());
         register(new FPSBoost());
         register(new EntityCulling());
+        register(new MotoG15Profile());
 
         // ==== HUD ====
         register(new HudFPS());
