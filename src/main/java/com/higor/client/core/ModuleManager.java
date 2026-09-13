@@ -7,6 +7,7 @@ import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HurtCam;
+import com.higor.client.modules.Perspective;
 import com.higor.client.modules.ToggleSprint;
 import com.higor.client.modules.Zoom;
 
@@ -28,6 +29,7 @@ public class ModuleManager {
         register(new Module("OldAnimations", Category.RENDER));
         register(new HurtCam());
         register(new Zoom());
+        register(new Perspective());
 
         // ==== HUD ====
         register(new HudFPS());
