@@ -6,6 +6,7 @@ import com.higor.client.hud.HudKeystrokes;
 import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.ChatConfig;
+import com.higor.client.modules.FPSBoost;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
@@ -43,6 +44,7 @@ public class ModuleManager {
         // ==== PERFORMANCE ====
         register(new MouseDelayFix());
         register(new Performance());
+        register(new FPSBoost());
 
         // ==== HUD ====
         register(new HudFPS());
@@ -76,4 +78,4 @@ public class ModuleManager {
         }
         return null;
     }
-} 
+}
