@@ -1,5 +1,6 @@
 package com.higor.client.hud;
 
+import com.higor.client.core.Setting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,6 +17,12 @@ public class HudSidebar extends HudModule {
 
     public HudSidebar() {
         super("Sidebar");
+        // Setting pra esconder a sidebar vanilla do servidor
+        addSetting(new Setting("Substituir Vanilla", false));
+    }
+
+    public boolean shouldReplaceVanilla() {
+        return getBool("Substituir Vanilla");
     }
 
     @Override
