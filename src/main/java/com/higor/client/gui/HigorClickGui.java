@@ -203,6 +203,17 @@ public class HigorClickGui extends GuiScreen {
         drawRect(x + w - 1, y, x + w, y + h, color);
     }
 
+@Override
+public void onGuiClosed() {
+    super.onGuiClosed();
+    if (HigorClient.instance != null
+            && HigorClient.instance.configManager != null
+            && HigorClient.instance.moduleManager != null) {
+        HigorClient.instance.configManager.saveAll(
+                HigorClient.instance.moduleManager);
+    }
+}
+
     @Override
     public boolean doesGuiPauseGame() {
         return false;
