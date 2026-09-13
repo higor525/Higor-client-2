@@ -31,9 +31,15 @@ public class HitDelayFix extends Module {
         if (event.entityPlayer == null) return;
         if (event.entityPlayer != Minecraft.getMinecraft().thePlayer) return;
 
-        // Reseta o contador de "attackCooldown" do jogador
-        // Na 1.8.9 isso não é uma feature nativa, mas o método ajuda a reduzir o delay
-        // que o servidor aplica quando você bate muito rápido
-        Minecraft.getMinecraft().thePlayer.resetCooldown();
+        // Reduz o delay de ataque resetando o ticksSinceLastSwing
+        // Campo existe no EntityLivingBase do 1.8.9
+        try {
+            java.lang.reflect.Field f = net.minecraft.entity.EntityLivingBase.class
+                    .getDeclaredField("ticksSinceLastSwing");
+            f.setAccessible(true);
+            f.setInt(Minecraft.getMinecraft().thePlayer, 0);
+        } catch (Exception e) {
+            // Se não achar o campo, ignora silenciosamente
+        }
     }
 }
