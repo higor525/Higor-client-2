@@ -9,6 +9,7 @@ import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
 import com.higor.client.modules.MouseDelayFix;
+import com.higor.client.modules.OldAnimations;
 import com.higor.client.modules.Perspective;
 import com.higor.client.modules.ToggleSprint;
 import com.higor.client.modules.Zoom;
@@ -31,7 +32,7 @@ public class ModuleManager {
 
         // ==== RENDER ====
         register(new FullBright());
-        register(new Module("OldAnimations", Category.RENDER));
+        register(new OldAnimations());
         register(new HurtCam());
         register(new Zoom());
         register(new Perspective());
