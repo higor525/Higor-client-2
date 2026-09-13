@@ -29,6 +29,10 @@ public class Zoom extends Module {
     @Override
     public void onDisable() {
         MinecraftForge.EVENT_BUS.unregister(this);
+        if (zooming) {
+            Minecraft.getMinecraft().gameSettings.fovSetting = originalFov;
+            zooming = false;
+        }
         System.out.println("[HIGOR CLIENT] Zoom desativado");
     }
 
@@ -47,23 +51,26 @@ public class Zoom extends Module {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event) {
+        if (!isEnabled()) return;
         if (Minecraft.getMinecraft().currentScreen != null) return;
-        int key = getZoomKey();
 
-        if (Keyboard.getEventKey() == key) {
-            if (Keyboard.getEventKeyState()) {
-                if (!zooming) {
-                    zooming = true;
-                    originalFov = Minecraft.getMinecraft().gameSettings.fovSetting;
-                    Minecraft.getMinecraft().gameSettings.fovSetting =
-                            (float) (originalFov / getZoomLevel());
-                }
-            } else {
-                if (zooming) {
-                    zooming = false;
-                    Minecraft.getMinecraft().gameSettings.fovSetting = originalFov;
-                }
+        int key = getZoomKey();
+        if (Keyboard.getEventKey() != key) return;
+
+        if (Keyboard.getEventKeyState()) {
+            // Tecla pressionada
+            if (!zooming) {
+                zooming = true;
+                originalFov = Minecraft.getMinecraft().gameSettings.fovSetting;
+                Minecraft.getMinecraft().gameSettings.fovSetting =
+                        (float) (originalFov / getZoomLevel());
+            }
+        } else {
+            // Tecla solta
+            if (zooming) {
+                zooming = false;
+                Minecraft.getMinecraft().gameSettings.fovSetting = originalFov;
             }
         }
     }
-                                     }
+}
