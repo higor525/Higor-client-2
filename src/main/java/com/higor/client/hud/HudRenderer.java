@@ -17,7 +17,8 @@ public class HudRenderer {
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Post event) {
         if (event.type != RenderGameOverlayEvent.ElementType.TEXT) return;
-        if (Minecraft.getMinecraft().currentScreen != null) return;
+        if (Minecraft.getMinecraft().currentScreen != null 
+        && !(Minecraft.getMinecraft().currentScreen instanceof com.higor.client.gui.HigorClickGui)) return;
 
         List<Module> modules = HigorClient.instance.moduleManager
                 .getModulesByCategory(Category.HUD);
