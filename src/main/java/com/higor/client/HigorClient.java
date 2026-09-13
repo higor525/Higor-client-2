@@ -42,7 +42,7 @@ public class HigorClient {
         MinecraftForge.EVENT_BUS.register(new com.higor.client.events.HigorKeyHandler());
         MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudRenderer());
         MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudEditor());
-MinecraftForge.EVENT_BUS.register(new com.higor.client.events.ModuleEventManager());
+        MinecraftForge.EVENT_BUS.register(new com.higor.client.events.ModuleEventManager());
         System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
     }
 
