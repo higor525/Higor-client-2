@@ -22,6 +22,11 @@ public class HigorConfigPanel {
     private static final int BTN_BG = 0xFF001428;
     private static final int BTN_HOVER = 0xFF003366;
 
+    // Arrastar
+    private boolean dragging = false;
+    private int dragOffsetX = 0;
+    private int dragOffsetY = 0;
+
     public HigorConfigPanel(Module module, int x, int y) {
         this.module = module;
         this.x = x;
@@ -30,19 +35,26 @@ public class HigorConfigPanel {
 
     public Module getModule() { return module; }
 
+    public int getHeight() {
+        return HEADER_H + 4 + (module.getSettings().size() * ROW_H) + 20;
+    }
+
     public void render(Minecraft mc, int mouseX, int mouseY) {
         List<Setting> settings = module.getSettings();
-        int height = HEADER_H + 4 + (settings.size() * ROW_H) + 20;
+        int height = getHeight();
 
         // Fundo
         Gui.drawRect(x, y, x + WIDTH, y + height, BG);
         drawBorder(x, y, WIDTH, height, BORDER);
 
-        // Header
-        Gui.drawRect(x, y, x + WIDTH, y + HEADER_H, 0xFF001428);
+        // Header (barra de arrastar)
+        int headerColor = dragging ? 0xFF003366 : 0xFF001428;
+        Gui.drawRect(x, y, x + WIDTH, y + HEADER_H, headerColor);
         Gui.drawRect(x, y + HEADER_H - 1, x + WIDTH, y + HEADER_H, BORDER);
-        mc.fontRendererObj.drawString(module.getName(),
-                x + 6, y + 4, ACCENT);
+        mc.fontRendererObj.drawString(module.getName(), x + 6, y + 4, ACCENT);
+
+        // Indicador "arraste aqui"
+        mc.fontRendererObj.drawString(":::", x + WIDTH - 42, y + 4, 0xFF666666);
 
         // Botão fechar [X]
         mc.fontRendererObj.drawString("X", x + WIDTH - 12, y + 4, 0xFFFF5555);
@@ -86,13 +98,11 @@ public class HigorConfigPanel {
                 int vx = x + WIDTH - 60;
                 mc.fontRendererObj.drawString(val, vx, sy + 2, TEXT);
 
-                // Botão [-]
                 int bx1 = x + WIDTH - 22;
                 boolean h1 = isHover(mouseX, mouseY, bx1, sy, 10, 10);
                 Gui.drawRect(bx1, sy, bx1 + 10, sy + 10, h1 ? BTN_HOVER : BTN_BG);
                 mc.fontRendererObj.drawString("-", bx1 + 3, sy + 1, ACCENT);
 
-                // Botão [+]
                 int bx2 = x + WIDTH - 10;
                 boolean h2 = isHover(mouseX, mouseY, bx2, sy, 10, 10);
                 Gui.drawRect(bx2, sy, bx2 + 10, sy + 10, h2 ? BTN_HOVER : BTN_BG);
@@ -124,21 +134,29 @@ public class HigorConfigPanel {
     }
 
     /**
-     * Retorna true se o clique foi consumido pelo painel.
+     * Retorna true se o painel deve ser FECHADO.
      */
     public boolean onClick(int mouseX, int mouseY) {
-        List<Setting> settings = module.getSettings();
-        int height = HEADER_H + 4 + (settings.size() * ROW_H) + 20;
+        int height = getHeight();
 
         // Fechar [X]
         if (mouseX >= x + WIDTH - 14 && mouseX <= x + WIDTH - 2
                 && mouseY >= y + 2 && mouseY <= y + 14) {
-            return true; // sinaliza fechar
+            return true;
+        }
+
+        // Iniciar arrastar (clicou no header, fora do X)
+        if (mouseY >= y && mouseY <= y + HEADER_H
+                && mouseX >= x && mouseX <= x + WIDTH - 16) {
+            this.dragging = true;
+            this.dragOffsetX = mouseX - x;
+            this.dragOffsetY = mouseY - y;
+            return false;
         }
 
         // Botões +/-
         int sy = y + HEADER_H + 4;
-        for (Setting s : settings) {
+        for (Setting s : module.getSettings()) {
             if (s.getType() == Setting.Type.NUMBER) {
                 int bx1 = x + WIDTH - 22;
                 if (isHover(mouseX, mouseY, bx1, sy, 10, 10)) {
@@ -163,10 +181,27 @@ public class HigorConfigPanel {
         return false;
     }
 
+    /**
+     * Chamado quando o mouse está pressionado — move o painel.
+     */
+    public void onMouseDrag(int mouseX, int mouseY) {
+        if (dragging) {
+            this.x = mouseX - dragOffsetX;
+            this.y = mouseY - dragOffsetY;
+        }
+    }
+
+    /**
+     * Chamado quando solta o mouse.
+     */
+    public void onMouseRelease() {
+        this.dragging = false;
+    }
+
     private void drawBorder(int x, int y, int w, int h, int color) {
         Gui.drawRect(x, y, x + w, y + 1, color);
         Gui.drawRect(x, y + h - 1, x + w, y + h, color);
         Gui.drawRect(x, y, x + 1, y + h, color);
         Gui.drawRect(x + w - 1, y, x + w, y + h, color);
     }
-                               }
+}
