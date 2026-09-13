@@ -1,3 +1,4 @@
+
 package com.higor.client;
 
 import com.higor.client.config.ConfigManager;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 @Mod(modid = HigorClient.MODID, name = HigorClient.NAME, version = HigorClient.VERSION)
 public class HigorClient {
@@ -28,20 +30,20 @@ public class HigorClient {
     public HudManager hudManager;
 
     @Mod.EventHandler
-public void preInit(FMLPreInitializationEvent event) {
-    System.out.println("[HIGOR CLIENT] Pre-Init iniciando...");
-    this.configManager = new ConfigManager(event.getModConfigurationDirectory());
-    this.eventManager = new EventManager();
-    this.moduleManager = new ModuleManager();
-    this.guiManager = new GuiManager();
-    this.hudManager = new HudManager();
-    MinecraftForge.EVENT_BUS.register(this.eventManager);
-    MinecraftForge.EVENT_BUS.register(new com.higor.client.events.MenuEventHandler());
-MinecraftForge.EVENT_BUS.register(new com.higor.client.events.HigorKeyHandler());
-MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudRenderer());
-MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudEditor());
-    System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
-}
+    public void preInit(FMLPreInitializationEvent event) {
+        System.out.println("[HIGOR CLIENT] Pre-Init iniciando...");
+        this.configManager = new ConfigManager(event.getModConfigurationDirectory());
+        this.eventManager = new EventManager();
+        this.moduleManager = new ModuleManager();
+        this.guiManager = new GuiManager();
+        this.hudManager = new HudManager();
+        MinecraftForge.EVENT_BUS.register(this.eventManager);
+        MinecraftForge.EVENT_BUS.register(new com.higor.client.events.MenuEventHandler());
+        MinecraftForge.EVENT_BUS.register(new com.higor.client.events.HigorKeyHandler());
+        MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudRenderer());
+        MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudEditor());
+        System.out.println("[HIGOR CLIENT] Pre-Init concluido.");
+    }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -54,5 +56,13 @@ MinecraftForge.EVENT_BUS.register(new com.higor.client.hud.HudEditor());
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         System.out.println("[HIGOR CLIENT] Post-Init concluido.");
+    }
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        // Salva configs ao sair do mundo
+        if (configManager != null && moduleManager != null) {
+            configManager.saveAll(moduleManager);
+        }
     }
 }
