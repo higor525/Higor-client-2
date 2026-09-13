@@ -11,6 +11,7 @@ import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
 import com.higor.client.modules.MouseDelayFix;
 import com.higor.client.modules.OldAnimations;
+import com.higor.client.modules.Performance;
 import com.higor.client.modules.Perspective;
 import com.higor.client.modules.ToggleSprint;
 import com.higor.client.modules.Zoom;
@@ -41,6 +42,7 @@ public class ModuleManager {
 
         // ==== PERFORMANCE ====
         register(new MouseDelayFix());
+        register(new Performance());
 
         // ==== HUD ====
         register(new HudFPS());
