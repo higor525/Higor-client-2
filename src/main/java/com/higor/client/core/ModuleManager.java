@@ -1,5 +1,11 @@
 package com.higor.client.core;
 
+import com.higor.client.hud.HudCPS;
+import com.higor.client.hud.HudFPS;
+import com.higor.client.hud.HudKeystrokes;
+import com.higor.client.hud.HudPotion;
+import com.higor.client.hud.HudSidebar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +24,11 @@ public class ModuleManager {
         register(new Module("OldAnimations", Category.RENDER));
 
         // ==== HUD ====
-        // Os módulos HUD serão adicionados na 4.4
+        register(new HudFPS());
+        register(new HudCPS());
+        register(new HudKeystrokes());
+        register(new HudPotion());
+        register(new HudSidebar());
 
         System.out.println("[HIGOR CLIENT] " + modules.size() + " modulos registrados.");
     }
