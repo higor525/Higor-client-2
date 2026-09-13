@@ -3,7 +3,6 @@ package com.higor.client.core;
 public enum Category {
     COMBAT("Combat"),
     MOVEMENT("Movement"),
-    PLAYER("Player"),
     RENDER("Render"),
     HUD("HUD"),
     MISC("Misc"),
