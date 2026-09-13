@@ -6,6 +6,7 @@ import com.higor.client.hud.HudKeystrokes;
 import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.ChatConfig;
+import com.higor.client.modules.EntityCulling;
 import com.higor.client.modules.FPSBoost;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
@@ -45,6 +46,7 @@ public class ModuleManager {
         register(new MouseDelayFix());
         register(new Performance());
         register(new FPSBoost());
+        register(new EntityCulling());
 
         // ==== HUD ====
         register(new HudFPS());
