@@ -170,6 +170,21 @@ public class HigorClickGui extends GuiScreen {
         drawRect(x, y, x + 1, y + h, color);
         drawRect(x + w - 1, y, x + w, y + h, color);
     }
+@Override
+protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+    super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+    if (openPanel != null) {
+        openPanel.onMouseDrag(mouseX, mouseY);
+    }
+}
+
+@Override
+protected void mouseReleased(int mouseX, int mouseY, int state) {
+    super.mouseReleased(mouseX, mouseY, state);
+    if (openPanel != null) {
+        openPanel.onMouseRelease();
+    }
+}
 
     @Override
     public boolean doesGuiPauseGame() {
