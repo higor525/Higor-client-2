@@ -6,6 +6,7 @@ import com.higor.client.hud.HudKeystrokes;
 import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.FullBright;
+import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
 import com.higor.client.modules.MouseDelayFix;
 import com.higor.client.modules.Perspective;
@@ -24,6 +25,9 @@ public class ModuleManager {
 
         // ==== MOVEMENT ====
         register(new ToggleSprint());
+
+        // ==== COMBAT ====
+        register(new HitDelayFix());
 
         // ==== RENDER ====
         register(new FullBright());
