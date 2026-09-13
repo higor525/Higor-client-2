@@ -197,12 +197,21 @@ for (int i = huds.size() - 1; i >= 0; i--) {
     }
 
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        if (openPanel != null) {
-            openPanel.onMouseDrag(mouseX, mouseY);
-        }
+protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+    super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+
+    // Arrastar painel de config
+    if (openPanel != null) {
+        openPanel.onMouseDrag(mouseX, mouseY);
+        return;
     }
+
+    // Arrastar HUD
+    if (draggingHud != null) {
+        draggingHud.setPosX(mouseX - hudDragOffsetX);
+        draggingHud.setPosY(mouseY - hudDragOffsetY);
+    }
+}
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
