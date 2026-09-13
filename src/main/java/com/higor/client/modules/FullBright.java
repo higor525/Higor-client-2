@@ -7,6 +7,9 @@ import net.minecraft.client.Minecraft;
 
 public class FullBright extends Module {
 
+    private float originalGamma = 1.0f;
+    private boolean applied = false;
+
     public FullBright() {
         super("FullBright", Category.RENDER);
         addSetting(new Setting("Intensidade", 1.0, 0.0, 1.0, 0.1));
@@ -19,9 +22,28 @@ public class FullBright extends Module {
 
     @Override
     public void onDisable() {
+        if (applied) {
+            Minecraft.getMinecraft().gameSettings.gammaSetting = originalGamma;
+            applied = false;
+        }
         System.out.println("[HIGOR CLIENT] FullBright desativado");
-        // Restaura o gamma original
-        Minecraft.getMinecraft().gameSettings.gammaSetting = 1.0f;
+    }
+
+    @Override
+    public void onUpdate() {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer == null) return;
+
+        if (!applied) {
+            originalGamma = mc.gameSettings.gammaSetting;
+            applied = true;
+        }
+
+        // gamma 1.0 = noite, 100.0 = brilho máximo
+        float intensity = (float) getNumber("Intensidade");
+        float targetGamma = originalGamma + (intensity * 10.0f);
+
+        mc.gameSettings.gammaSetting = targetGamma;
     }
 
     public float getIntensity() {
