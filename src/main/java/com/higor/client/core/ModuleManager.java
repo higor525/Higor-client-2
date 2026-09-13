@@ -11,6 +11,7 @@ import com.higor.client.modules.FPSBoost;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HitDelayFix;
 import com.higor.client.modules.HurtCam;
+import com.higor.client.modules.NoHurtCam;
 import com.higor.client.modules.MotoG15Profile;
 import com.higor.client.modules.MouseDelayFix;
 import com.higor.client.modules.NoParticles;
@@ -40,6 +41,7 @@ public class ModuleManager {
         register(new FullBright());
         register(new OldAnimations());
         register(new HurtCam());
+        register(new NoHurtCam());
         register(new Zoom());
         register(new Perspective());
         register(new ChatConfig());
