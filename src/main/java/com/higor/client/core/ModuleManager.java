@@ -14,7 +14,6 @@ public class ModuleManager {
         register(new FullBright());
         register(new OldAnimations());
         register(new HurtCam());
-        register(new NoHurtCam());
         register(new Zoom());
         register(new Perspective());
         register(new ChatConfig());
