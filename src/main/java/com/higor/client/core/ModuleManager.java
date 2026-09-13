@@ -7,6 +7,7 @@ import com.higor.client.hud.HudPotion;
 import com.higor.client.hud.HudSidebar;
 import com.higor.client.modules.FullBright;
 import com.higor.client.modules.HurtCam;
+import com.higor.client.modules.MouseDelayFix;
 import com.higor.client.modules.Perspective;
 import com.higor.client.modules.ToggleSprint;
 import com.higor.client.modules.Zoom;
@@ -30,6 +31,9 @@ public class ModuleManager {
         register(new HurtCam());
         register(new Zoom());
         register(new Perspective());
+
+        // ==== PERFORMANCE ====
+        register(new MouseDelayFix());
 
         // ==== HUD ====
         register(new HudFPS());
