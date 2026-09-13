@@ -7,21 +7,9 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import java.lang.reflect.Field;
 
-/**
- * NoHurtCam — remove o efeito de balançar a câmera ao tomar dano.
- *
- * Funciona sem Mixin:
- *   - Ao ativar, se registra no MinecraftForge.EVENT_BUS.
- *   - A cada frame (RenderTickEvent.START), zera o campo hurtCameraEffect
- *     do EntityRenderer via reflection, antes que o jogo o leia pra
- *     calcular o sway da câmera.
- *   - Ao desativar, se desregistra do bus (sem overhead quando off).
- */
 public class NoHurtCam extends Module {
-
     private Field hurtCameraEffect = null;
     private boolean fieldSearched = false;
 
@@ -29,10 +17,28 @@ public class NoHurtCam extends Module {
         super("NoHurtCam", Category.RENDER);
     }
 
-    @Override
-    public void onEnable() {
-        MinecraftForge.EVENT_BUS.register(this);
-        System.out.println("[HIGOR CLIENT] NoHurtCam ativado");
+    @Override public void onEnable() { MinecraftForge.EVENT_BUS.register(this); }
+    @Override public void onDisable() { MinecraftForge.EVENT_BUS.unregister(this); }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc == null || mc.entityRenderer == null) return;
+        if (!fieldSearched) { findField(); fieldSearched = true; }
+        if (hurtCameraEffect == null) return;
+        try { hurtCameraEffect.setFloat(mc.entityRenderer, 0.0f); }
+        catch (Exception ignored) {}
     }
 
-    @Override
+    private void findField() {
+        for (String n : new String[]{"hurtCameraEffect","field_78498_aX"}) {
+            try {
+                Field f = EntityRenderer.class.getDeclaredField(n);
+                f.setAccessible(true);
+                hurtCameraEffect = f;
+                return;
+            } catch (NoSuchFieldException ignored) {}
+        }
+    }
+}
